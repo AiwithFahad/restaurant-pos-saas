@@ -1,0 +1,17 @@
+<?php require_once __DIR__ . '/includes/auth.php'; $user=require_role(['owner','branch_manager','cashier','waiter','kitchen','inventory_manager','accountant']); $pdo=db(); check_tenant_active($pdo); $tid=require_tenant(); $base=''; $active='orders'; $pageTitle='Receipt'; $bid=branch_id();
+function q1(PDO $pdo,string $sql,array $a){ $s=$pdo->prepare($sql); $s->execute($a); return $s->fetchColumn(); }
+function qa(PDO $pdo,string $sql,array $a): array { $s=$pdo->prepare($sql); $s->execute($a); return $s->fetchAll(); }
+
+$id=(int)($_GET['id']??0); $s=$pdo->prepare('SELECT o.*,b.name branch_name,t.name table_name,c.name customer_name,u.name cashier FROM orders o LEFT JOIN branches b ON b.id=o.branch_id LEFT JOIN restaurant_tables t ON t.id=o.table_id LEFT JOIN customers c ON c.id=o.customer_id LEFT JOIN users u ON u.id=o.user_id WHERE o.id=? AND o.tenant_id=?'); $s->execute([$id,$tid]); $o=$s->fetch(); if(!$o){ http_response_code(404); exit('Order not found.'); }
+$items=qa($pdo,'SELECT * FROM order_items WHERE order_id=? AND tenant_id=?',[$id,$tid]); $pays=qa($pdo,'SELECT * FROM order_payments WHERE order_id=? AND tenant_id=?',[$id,$tid]);
+$base=''; ?><!doctype html><html><head><meta charset="utf-8"><title>Receipt <?= e($o['order_number']) ?></title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:#f6f7fb}.receipt{max-width:380px;margin:2rem auto;background:#fff;padding:1.5rem;border-radius:1rem}@media print{body{background:#fff}.receipt{box-shadow:none;margin:0 auto}}</style></head><body>
+<div class="receipt shadow"><h4 class="text-center mb-0">RestoPro</h4><p class="text-center small text-muted mb-2"><?= e($o['branch_name'] ?? '') ?></p>
+<div class="small d-flex justify-content-between"><span><?= e($o['order_number']) ?></span><span><?= e($o['created_at']) ?></span></div>
+<div class="small">Type: <?= e($o['order_type']) ?><?= $o['table_name']?' · Table '.e($o['table_name']):'' ?><?= $o['customer_name']?' · '.e($o['customer_name']):'' ?><br>Cashier: <?= e($o['cashier'] ?? '') ?></div><hr>
+<table class="table table-sm"><tr><th>Item</th><th>Qty</th><th class="text-end">Amount</th></tr><?php foreach($items as $i): ?><tr><td><?= e($i['product_name']) ?></td><td><?= $i['quantity'] ?> × <?= money($i['unit_price']) ?></td><td class="text-end"><?= money($i['line_total']) ?></td></tr><?php endforeach; ?></table>
+<div class="small"><div class="d-flex justify-content-between"><span>Subtotal</span><span><?= money($o['subtotal']) ?></span></div>
+<div class="d-flex justify-content-between"><span>Discount</span><span>−<?= money($o['discount']) ?></span></div>
+<div class="d-flex justify-content-between"><span>Tax (<?= $o['tax_rate'] ?>%)</span><span><?= money($o['tax_amount']) ?></span></div>
+<div class="d-flex justify-content-between fs-6 fw-bold"><span>Total</span><span><?= money($o['total']) ?></span></div>
+<?php foreach($pays as $pay): ?><div class="d-flex justify-content-between text-muted"><span>Paid (<?= e($pay['method']) ?>)</span><span><?= money($pay['amount']) ?></span></div><?php endforeach; ?></div>
+<hr><p class="text-center small mb-0">Thank you for dining with us!</p><div class="text-center mt-3 d-print-none"><button class="btn btn-primary btn-sm" onclick="window.print()">Print</button> <a class="btn btn-outline-secondary btn-sm" href="orders.php">Back to orders</a></div></div></body></html>

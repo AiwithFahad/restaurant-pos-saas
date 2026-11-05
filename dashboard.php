@@ -1,0 +1,27 @@
+<?php require_once __DIR__ . '/includes/auth.php'; $user=require_role(['owner','branch_manager','cashier','waiter','kitchen','inventory_manager','accountant']); $pdo=db(); check_tenant_active($pdo); $tid=require_tenant(); $base=''; $active='dashboard'; $pageTitle='Restaurant Dashboard'; $bid=branch_id();
+function q1(PDO $pdo,string $sql,array $a){ $s=$pdo->prepare($sql); $s->execute($a); return $s->fetchColumn(); }
+function qa(PDO $pdo,string $sql,array $a): array { $s=$pdo->prepare($sql); $s->execute($a); return $s->fetchAll(); }
+
+$todaySales = q1($pdo,'SELECT COALESCE(SUM(total),0) FROM orders WHERE tenant_id=? AND DATE(created_at)=CURDATE() AND status!="cancelled" AND status!="refunded"'.($bid?' AND branch_id='.(int)$bid:''),[$tid]);
+$todayOrders = q1($pdo,'SELECT COUNT(*) FROM orders WHERE tenant_id=? AND DATE(created_at)=CURDATE()'.($bid?' AND branch_id='.(int)$bid:''),[$tid]);
+$totalRevenue = q1($pdo,'SELECT COALESCE(SUM(total),0) FROM orders WHERE tenant_id=? AND status IN ("completed","served")'.($bid?' AND branch_id='.(int)$bid:''),[$tid]);
+$pending = q1($pdo,'SELECT COUNT(*) FROM orders WHERE tenant_id=? AND status IN ("pending","preparing","ready")'.($bid?' AND branch_id='.(int)$bid:''),[$tid]);
+$totalProducts = q1($pdo,'SELECT COUNT(*) FROM products WHERE tenant_id=?',[$tid]);
+$lowStock = qa($pdo,'SELECT name,stock_quantity,reorder_level FROM products WHERE tenant_id=? AND track_stock=1 AND stock_quantity<=reorder_level ORDER BY stock_quantity LIMIT 6',[$tid]);
+$lowIng = qa($pdo,'SELECT name,stock_quantity,unit,reorder_level FROM ingredients WHERE tenant_id=? AND stock_quantity<=reorder_level ORDER BY stock_quantity LIMIT 6',[$tid]);
+$best = qa($pdo,'SELECT p.name, SUM(oi.quantity) qty, SUM(oi.line_total) rev FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id WHERE oi.tenant_id=? AND o.status!="cancelled" GROUP BY p.id ORDER BY qty DESC LIMIT 5',[$tid]);
+$revRows = qa($pdo,'SELECT DATE_FORMAT(created_at,"%b") m, COALESCE(SUM(total),0) t FROM orders WHERE tenant_id=? AND status!="cancelled" GROUP BY MONTH(created_at) ORDER BY MONTH(created_at)',[$tid]);
+$branchRows = qa($pdo,'SELECT b.name, COUNT(o.id) orders, COALESCE(SUM(o.total),0) rev FROM branches b LEFT JOIN orders o ON o.branch_id=b.id AND o.status!="cancelled" WHERE b.tenant_id=? GROUP BY b.id ORDER BY rev DESC',[$tid]);
+$acts = qa($pdo,'SELECT * FROM activities WHERE tenant_id=? ORDER BY id DESC LIMIT 6',[$tid]);
+include __DIR__ . '/includes/header.php'; ?>
+<div class="row g-3">
+<?php foreach ([["Today's sales",money($todaySales),'bi-cash-coin'],['Orders today',$todayOrders,'bi-receipt'],['Total revenue',money($totalRevenue),'bi-graph-up'],['Pending orders',$pending,'bi-hourglass'],['Products',$totalProducts,'bi-journal-richtext'],['Low stock alerts',count($lowStock)+count($lowIng),'bi-exclamation-triangle']] as [$l,$v,$i]): ?>
+<div class="col-md-4 col-xl-2"><div class="card stat-card p-3"><i class="bi <?= $i ?> fs-4 text-primary"></i><div class="fs-4 fw-bold"><?= e((string)$v) ?></div><div class="text-muted small"><?= e($l) ?></div></div></div><?php endforeach; ?>
+</div>
+<div class="row g-3 mt-1">
+<div class="col-lg-8"><div class="card p-3"><h6>Revenue by month</h6><canvas id="revChart" height="120"></canvas></div>
+<div class="card p-3 mt-3"><h6>Branch performance</h6><table class="table mb-0"><tr><th>Branch</th><th>Orders</th><th>Revenue</th></tr><?php foreach($branchRows as $r): ?><tr><td><?= e($r['name']) ?></td><td><?= $r['orders'] ?></td><td><?= money($r['rev']) ?></td></tr><?php endforeach; ?></table></div></div>
+<div class="col-lg-4"><div class="card p-3"><h6>Best-selling products</h6><?php foreach($best as $r): ?><div class="d-flex justify-content-between border-bottom py-2"><span><?= e($r['name']) ?></span><span class="badge bg-primary"><?= $r['qty'] ?> sold · <?= money($r['rev']) ?></span></div><?php endforeach; if(!$best) echo '<p class="text-muted small">No sales yet.</p>'; ?></div>
+<div class="card p-3 mt-3"><h6 class="text-danger">Low stock alerts</h6><?php foreach($lowStock as $r): ?><div class="small border-bottom py-1"><?= e($r['name']) ?> — <strong><?= $r['stock_quantity'] ?></strong> left (reorder ≤ <?= $r['reorder_level'] ?>)</div><?php endforeach; foreach($lowIng as $r): ?><div class="small border-bottom py-1"><?= e($r['name']) ?> — <strong><?= $r['stock_quantity'] ?> <?= e($r['unit']) ?></strong> left</div><?php endforeach; if(!$lowStock && !$lowIng) echo '<p class="text-muted small mb-0">Stock levels healthy.</p>'; ?></div>
+<div class="card p-3 mt-3"><h6>Recent activity</h6><ul class="list-unstyled small mb-0"><?php foreach($acts as $a): ?><li class="border-bottom py-2"><?= e($a['description']) ?></li><?php endforeach; ?></ul></div></div></div>
+<?php $extraJs='<script>makeChart("revChart","bar",'.json_encode(array_column($revRows,'m')).','.json_encode(array_map('floatval',array_column($revRows,'t'))).',"Revenue $");</script>'; include __DIR__ . '/includes/footer.php'; ?>

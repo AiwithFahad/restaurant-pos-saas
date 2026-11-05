@@ -1,0 +1,1 @@
+function makeChart(id,type,labels,data,label){const el=document.getElementById(id);if(!el||typeof Chart==='undefined')return;new Chart(el,{type,data:{labels,datasets:[{label,data,borderColor:'#ea580c',backgroundColor:'rgba(234,88,12,.55)',tension:.35,fill:type==='line'}]},options:{responsive:true,plugins:{legend:{display:type==='doughnut'}}}});}

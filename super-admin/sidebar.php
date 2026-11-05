@@ -1,6 +1,7 @@
+<?php $sbUser = function_exists('current_user') ? current_user() : null; $sbIni = ''; foreach (preg_split('/\s+/', trim($sbUser['name'] ?? '')) as $w) { if ($w !== '') $sbIni .= strtoupper($w[0]); if (strlen($sbIni) >= 2) break; } ?>
 <nav class="sidebar d-flex flex-column p-3">
-<a class="brand text-white text-decoration-none fs-5 fw-bold mb-4" href="index.php"><i class="bi bi-shield-lock"></i> Super Admin</a>
+<a class="brand text-white text-decoration-none mb-4" href="index.php"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6l7-3Z" fill="#fff" opacity=".96"/><path d="M9 12l2.2 2.2L15.5 10" stroke="#ea580c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="brand-name">RestoPro<span class="brand-sub">Super Admin</span></span></a>
 <?php foreach([['index.php','Platform','bi-speedometer2'],['tenants.php','Restaurants','bi-buildings'],['plans.php','Plans','bi-layers'],['subscriptions.php','Subscriptions','bi-credit-card'],['coupons.php','Coupons','bi-ticket-percent'],['tickets.php','Support Tickets','bi-life-preserver'],['announcements.php','Announcements','bi-megaphone'],['settings.php','Settings','bi-gear']] as [$f,$l,$i]): ?>
 <a class="nav-link <?= ($active??'')===$l?'active':'' ?>" href="<?= $f ?>"><i class="bi <?= $i ?>"></i> <?= $l ?></a><?php endforeach; ?>
-<div class="mt-auto small text-white-50"><?= e(current_user()['name'] ?? '') ?></div>
-<a class="nav-link" href="../auth/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></nav>
+<div class="mt-auto"><div class="sidebar-user"><span class="avatar-circle"><?= e($sbIni !== '' ? $sbIni : 'S') ?></span><span class="u-meta"><span class="u-name d-block"><?= e(current_user()['name'] ?? '') ?></span><span class="u-role d-block">Super Admin</span></span></div>
+<a class="nav-link" href="../auth/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></div></nav>

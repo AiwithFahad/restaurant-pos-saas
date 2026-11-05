@@ -20,7 +20,7 @@ include __DIR__ . '/includes/header.php'; ?>
 <div class="col-md-2"><input class="form-control" type="number" name="capacity" placeholder="Seats" value="<?= e($edit['capacity']??'4') ?>"></div>
 <div class="col-md-2"><button class="btn btn-primary w-100"><?= $edit?'Update':'Add' ?> table</button></div></form></div>
 <div class="row g-3"><?php foreach($rows as $r): $cls=$r['status']==='available'?'success':($r['status']==='occupied'?'danger':'warning'); ?>
-<div class="col-6 col-md-3 col-xl-2"><div class="card p-3 text-center border-<?= $cls ?>"><div class="fs-3"><i class="bi bi-grid-3x3"></i></div><div class="fw-bold"><?= e($r['name']) ?></div><div class="small text-muted"><?= e($r['branch_name']) ?> · <?= $r['capacity'] ?> seats</div>
+<div class="col-6 col-md-3 col-xl-2"><div class="card floor-card p-3 text-center border-<?= $cls ?>"><div class="fs-3"><i class="bi bi-grid-3x3"></i></div><div class="fw-bold"><?= e($r['name']) ?></div><div class="small text-muted"><?= e($r['branch_name']) ?> · <?= $r['capacity'] ?> seats</div>
 <span class="badge bg-<?= $cls ?> my-2"><?= e($r['status']) ?></span>
 <form method="post" class="d-flex gap-1 justify-content-center flex-wrap"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= $r['id'] ?>">
 <?php if($r['status']!=='available'): ?><button class="btn btn-sm btn-outline-success" name="status" value="available">Free</button><?php endif; ?>

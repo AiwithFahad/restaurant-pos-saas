@@ -1,9 +1,9 @@
-<?php $b = $base ?? ''; ?>
+<?php $b = $base ?? ''; $sbUser = current_user(); $sbIni = ''; foreach (preg_split('/\s+/', trim($sbUser['name'] ?? '')) as $w) { if ($w !== '') $sbIni .= strtoupper($w[0]); if (strlen($sbIni) >= 2) break; } ?>
 <nav class="sidebar d-flex flex-column p-3">
-  <a class="brand text-white text-decoration-none fs-5 fw-bold mb-4" href="<?= $b ?>dashboard.php"><i class="bi bi-shop"></i> RestoPro</a>
+  <a class="brand text-white text-decoration-none mb-4" href="<?= $b ?>dashboard.php"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 17.5h16M12 8.2c-3.9 0-7 2.6-7.6 6.1h15.2C19 10.8 15.9 8.2 12 8.2Z" fill="#fff" opacity=".96"/><path d="M12 8.2c0-1.7 1-2.3 1-3.7" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M3 20h18" stroke="#fdba74" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="brand-name">RestoPro<span class="brand-sub">Restaurant OS</span></span></a>
   <?php foreach ([['dashboard','dashboard.php','bi-speedometer2','Dashboard'],['pos','pos.php','bi-calculator','POS Billing'],['orders','orders.php','bi-receipt','Orders'],['kitchen','kitchen.php','bi-fire','Kitchen Display'],['tables','tables.php','bi-grid-3x3','Tables'],['menu','menu.php','bi-journal-richtext','Menu'],['inventory','inventory.php','bi-boxes','Inventory'],['customers','customers.php','bi-people','Customers'],['staff','staff.php','bi-person-badge','Staff'],['branches','branches.php','bi-buildings','Branches'],['finance','finance.php','bi-wallet2','Finance'],['reports','reports.php','bi-bar-chart','Reports'],['subscription','subscription.php','bi-credit-card','Subscription'],['settings','settings.php','bi-gear','Settings']] as [$k,$u,$i,$l]): ?>
   <a class="nav-link <?= ($active??'')===$k?'active':'' ?>" href="<?= $b ?><?= $u ?>"><i class="bi <?= $i ?>"></i> <?= $l ?></a>
   <?php endforeach; ?>
-  <div class="mt-auto small text-white-50"><?= e(current_user()['name'] ?? '') ?><br><?= e(str_replace('_',' ',current_user()['role'] ?? '')) ?></div>
-  <a class="nav-link" href="<?= $b ?>auth/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  <div class="mt-auto"><div class="sidebar-user"><span class="avatar-circle"><?= e($sbIni !== '' ? $sbIni : 'R') ?></span><span class="u-meta"><span class="u-name d-block"><?= e(current_user()['name'] ?? '') ?></span><span class="u-role d-block"><?= e(str_replace('_',' ',current_user()['role'] ?? '')) ?></span></span></div>
+  <a class="nav-link" href="<?= $b ?>auth/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></div>
 </nav>

@@ -3,21 +3,73 @@
 <title>RestoPro — Restaurant POS & ERP SaaS (Demo)</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-:root{--brand:#ea580c;--bg:#f6f7fb;--card:#fff;--text:#172033}
-body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-body.dark{--bg:#111827;--card:#1f2937;--text:#e5e7eb} body.dark .card{background:var(--card);color:var(--text)} body.dark .table{color:var(--text)} body.dark .btn-outline-secondary{color:#e5e7eb;border-color:#4b5563}
-.layout{display:flex;min-height:100vh}.sidebar{width:230px;background:linear-gradient(180deg,#7c2d12,#ea580c);position:sticky;top:0;height:100vh}
-.sidebar .nav-link{color:#ffedd5;border-radius:.5rem;margin:.15rem 0;cursor:pointer}.sidebar .nav-link:hover,.sidebar .nav-link.active{background:rgba(255,255,255,.18);color:#fff}
-.main{flex:1;min-width:0}.card{border:0;border-radius:1rem;box-shadow:0 8px 24px rgba(15,23,42,.07)}
-.prod-btn{height:100%;width:100%;text-align:left}.view{display:none}.view.on{display:block}
-.tbl{aspect-ratio:1.2;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:1rem;font-weight:600}
-@media(max-width:768px){.sidebar{width:72px}.sidebar .nav-link{font-size:0}.sidebar .nav-link i{font-size:1.1rem}.brand{font-size:0!important}}
+:root{--brand:#ea580c;--brand-2:#f97316;--brand-soft:#ffedd5;--bg:#faf6f1;--card:#fff;--text:#1c2420;--muted:#78716c;--border:#f0e6da;--border-strong:#e7ddd0;--input-bg:#fff;--pos-grad:linear-gradient(135deg,#ffedd5,#fed7aa);--sidebar-bg:linear-gradient(180deg,#1c1917,#292524 55%,#431407 135%);--shadow-sm:0 2px 10px rgba(28,25,23,.06);--shadow:0 12px 30px rgba(28,25,23,.10);--shadow-lg:0 22px 48px rgba(124,45,18,.18)}
+body.dark{--bg:#0c0a09;--card:#1c1917;--text:#f5f0ea;--muted:#a8a29e;--border:#292524;--border-strong:#44403c;--input-bg:#292524;--pos-grad:linear-gradient(135deg,#431407,#7c2d12);--brand-soft:#431407;--shadow-sm:0 2px 10px rgba(0,0,0,.4);--shadow:0 12px 32px rgba(0,0,0,.45);--shadow-lg:0 24px 52px rgba(0,0,0,.55)}
+*{scrollbar-width:thin;scrollbar-color:rgba(234,88,12,.45) transparent}::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:rgba(234,88,12,.4);border-radius:99px}
+body{background:var(--bg);color:var(--text);font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:"Sora","Inter",system-ui,sans-serif;letter-spacing:-.02em}
+.text-primary{color:var(--brand)!important}.text-muted{color:var(--muted)!important}.text-body{color:var(--text)!important}.bg-primary{background-color:var(--brand)!important}.border-primary{border-color:var(--brand)!important}
+.layout{display:flex;min-height:100vh}.main{flex:1;min-width:0;animation:pageIn .45s ease both}@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sidebar{width:236px;flex:0 0 auto;background:var(--sidebar-bg);position:sticky;top:0;height:100vh;box-shadow:6px 0 28px rgba(28,25,23,.18);z-index:10}
+.sidebar .brand{display:flex;align-items:center;gap:.6rem;cursor:pointer}
+.brand-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f97316,#ea580c 55%,#c2410c);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(234,88,12,.45)}
+.brand-mark svg{width:24px;height:24px}.brand-name{font-family:"Sora",sans-serif;font-weight:800;font-size:1.15rem;color:#fff;line-height:1.05}.brand-sub{display:block;font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#fdba74}
+.sidebar .nav-link{position:relative;color:#d6d3d1;border-radius:.7rem;margin:.14rem 0;padding:.58rem .75rem;font-weight:500;cursor:pointer;display:flex;gap:.6rem;align-items:center;transition:all .2s}
+.sidebar .nav-link i{width:1.25rem;text-align:center}
+.sidebar .nav-link:hover{background:rgba(255,255,255,.09);color:#fff;transform:translateX(3px)}
+.sidebar .nav-link.active{background:linear-gradient(90deg,rgba(249,115,22,.32),rgba(249,115,22,.10));color:#fff;font-weight:600}
+.sidebar .nav-link.active::before{content:"";position:absolute;left:-.75rem;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,#fdba74,#ea580c)}
+.avatar-circle{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;border:2px solid rgba(255,255,255,.25)}
+.card{background:var(--card);color:var(--text);border:1px solid var(--border)!important;border-radius:1.3rem!important;box-shadow:var(--shadow-sm);transition:box-shadow .25s,transform .25s}
+.card:hover{box-shadow:var(--shadow)}
+.stat-card{position:relative;overflow:hidden}.stat-card::after{content:"";position:absolute;inset:auto -22px -30px auto;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.22),transparent 68%)}
+.stat-card i.fs-4{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);display:inline-flex;align-items:center;justify-content:center;color:var(--brand)!important;margin-bottom:.35rem}
+.hero-welcome{position:relative;overflow:hidden;border-radius:1.3rem;background:linear-gradient(120deg,#1c1917,#7c2d12 55%,#ea580c 120%);color:#fff7ed;box-shadow:var(--shadow-lg)}
+.hero-welcome::before{content:"";position:absolute;inset:0;background:radial-gradient(520px 220px at 90% -10%,rgba(253,186,116,.35),transparent 60%)}
+.hero-inner{position:relative;display:flex;align-items:center;gap:1.3rem;padding:1.3rem 1.5rem;flex-wrap:wrap}
+.hero-welcome h2{font-weight:800;color:#fff;margin:.2rem 0 .3rem}.hero-welcome p{color:#ffedd5;margin:0;max-width:540px}
+.hero-welcome img{width:230px;height:118px;object-fit:cover;border-radius:1rem;box-shadow:0 16px 30px rgba(0,0,0,.35)}
+.hero-chip{display:inline-flex;gap:.4rem;align-items:center;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:.3rem .75rem;font-size:.78rem;font-weight:600}
+.btn{border-radius:.75rem;font-weight:600;transition:all .2s}.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,#f97316,#ea580c);border-color:#ea580c;box-shadow:0 8px 18px rgba(234,88,12,.28)}
+.btn-primary:hover{background:linear-gradient(135deg,#ea580c,#c2410c);border-color:#c2410c}
+.btn-success{background:linear-gradient(135deg,#f59e0b,#ea580c);border-color:#d97706;box-shadow:0 10px 22px rgba(234,88,12,.3)}
+.btn-success:hover{background:linear-gradient(135deg,#ea580c,#c2410c);border-color:#c2410c}
+.btn-outline-primary{color:var(--brand);border-color:var(--brand)}.btn-outline-primary:hover{background:var(--brand);border-color:var(--brand)}
+.btn-outline-secondary{color:var(--text);border-color:var(--border-strong);background:var(--card)}
+.btn-outline-secondary:hover{background:var(--card);color:var(--brand);border-color:var(--brand)}
+.form-control,.form-select{background:var(--input-bg);color:var(--text);border:1px solid var(--border-strong);border-radius:.75rem}
+.form-control:focus,.form-select:focus{background:var(--input-bg);color:var(--text);border-color:var(--brand);box-shadow:0 0 0 4px rgba(234,88,12,.14)}
+.table{color:var(--text);--bs-table-bg:transparent;--bs-table-color:var(--text);vertical-align:middle}
+.table>thead>tr>th{background:var(--brand-soft);color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border-strong);padding:.8rem .9rem}
+.table>tbody>tr>td{padding:.75rem .9rem;border-color:var(--border)}
+.badge{border-radius:99px;padding:.42em .75em;font-weight:600}
+.alert{border-radius:1rem;border:0}
+.view{display:none}.view.on{display:block;animation:pageIn .4s ease both}
+/* POS product cards — sleek tablet look */
+.prod-btn{height:100%;width:100%;text-align:left;padding:0!important;overflow:hidden;border-radius:1.15rem!important;border:1px solid var(--border)!important;background:var(--card)!important;display:flex;flex-direction:column;box-shadow:var(--shadow-sm)}
+.prod-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:rgba(249,115,22,.55)!important}
+.prod-btn:active{transform:scale(.985)}
+.pos-img{height:104px;flex:0 0 auto;background:var(--pos-grad);position:relative;overflow:hidden;display:block}
+.pos-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.prod-btn:hover .pos-img img{transform:scale(1.07)}
+.pos-img.noimg{display:flex;align-items:center;justify-content:center}
+.pos-img.noimg::before{content:"\F67F";font-family:"bootstrap-icons";font-size:2rem;color:#fdba74}
+.pos-card-body{padding:.55rem .75rem .75rem;display:block;width:100%}
+.pos-price{color:var(--brand);font-weight:800;font-size:1.02rem}
+.menu-thumb{width:52px;height:52px;border-radius:14px;object-fit:cover;background:var(--pos-grad);box-shadow:var(--shadow-sm)}
+#placeBtn,.checkout-btn{padding:.85rem;font-size:1.05rem;border-radius:.9rem;width:100%}
+#kds .card strong{font-size:1.1rem}#kds .card p{font-size:.95rem;line-height:1.55}
+.tbl{aspect-ratio:1.15;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:1.15rem!important;font-weight:600;gap:.15rem}
+.tbl:hover{transform:translateY(-3px) scale(1.015)}
+@media(max-width:768px){.sidebar{width:72px}.sidebar .nav-link{font-size:0;justify-content:center}.sidebar .nav-link i{font-size:1.15rem}.brand-name,.brand-sub,.side-user{display:none!important}.hero-welcome img{width:150px;height:96px}}
 </style></head>
 <body><div class="layout">
 <nav class="sidebar d-flex flex-column p-3">
-<a class="brand text-white text-decoration-none fs-5 fw-bold mb-4" onclick="show('pos')"><i class="bi bi-shop"></i> RestoPro</a>
+<a class="brand text-white text-decoration-none mb-4" onclick="show('pos')"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 17.5h16M12 8.2c-3.9 0-7 2.6-7.6 6.1h15.2C19 10.8 15.9 8.2 12 8.2Z" fill="#fff" opacity=".96"/><path d="M12 8.2c0-1.7 1-2.3 1-3.7" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M3 20h18" stroke="#fdba74" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="brand-name">RestoPro<span class="brand-sub">Restaurant OS</span></span></a>
 <a class="nav-link" data-v="dashboard" onclick="show('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a>
 <a class="nav-link active" data-v="pos" onclick="show('pos')"><i class="bi bi-calculator"></i> POS Billing</a>
 <a class="nav-link" data-v="orders" onclick="show('orders')"><i class="bi bi-receipt"></i> Orders</a>
@@ -25,14 +77,15 @@ body.dark{--bg:#111827;--card:#1f2937;--text:#e5e7eb} body.dark .card{background
 <a class="nav-link" data-v="tables" onclick="show('tables')"><i class="bi bi-grid-3x3"></i> Tables</a>
 <a class="nav-link" data-v="menu" onclick="show('menu')"><i class="bi bi-journal-richtext"></i> Menu</a>
 <a class="nav-link" data-v="plans" onclick="show('plans')"><i class="bi bi-credit-card"></i> Plans</a>
-<div class="mt-auto"><button class="btn btn-sm btn-outline-light w-100" id="themeBtn"><i class="bi bi-moon"></i> Light / Dark</button>
-<div class="small text-white-50 mt-3">Demo Owner<br>owner role · Main Branch</div></div>
+<div class="mt-auto"><button class="btn btn-sm btn-outline-light w-100" id="themeBtn"><i class="bi bi-sun"></i> Light / Dark</button>
+<div class="side-user d-flex align-items-center gap-2 mt-3"><span class="avatar-circle">DO</span><span class="small text-white-50 lh-sm">Demo Owner<br>owner role · Main Branch</span></div></div>
 </nav>
 <main class="main p-4">
 <div class="alert alert-warning py-2 small"><i class="bi bi-info-circle"></i> <strong>Static demo:</strong> this page runs fully in your browser (localStorage). The full RestoPro app is Core PHP 8 + MySQL on GitHub, with a transactional POS API, branch isolation, stock decrements and Super Admin billing.</div>
 
 <!-- DASHBOARD -->
 <section class="view" id="v-dashboard"><h1 class="h4 mb-3">Restaurant Dashboard</h1>
+<div class="hero-welcome mb-3"><div class="hero-inner"><div class="flex-grow-1"><span class="hero-chip"><i class="bi bi-fire"></i> RestoPro · Main Branch</span><h2>Welcome back, Demo Owner</h2><p>Tonight's service at a glance — sales, best sellers and the stock that needs a top-up before the dinner rush.</p></div><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=60" alt="Restaurant interior" loading="lazy" onerror="this.remove()"></div></div>
 <div class="row g-3" id="statCards"></div>
 <div class="row g-3 mt-1"><div class="col-lg-8"><div class="card p-3"><h6>Revenue — last 7 days</h6><canvas id="revChart" height="120"></canvas></div></div>
 <div class="col-lg-4"><div class="card p-3"><h6>Best sellers</h6><div id="bestList"></div></div>
@@ -52,7 +105,7 @@ body.dark{--bg:#111827;--card:#1f2937;--text:#e5e7eb} body.dark .card{background
 <div class="col-6">Tax %<input class="form-control form-control-sm" type="number" id="tax" value="5" min="0" oninput="renderCart()"></div>
 <div class="col-6">Payment<select class="form-select form-select-sm" id="pay"><option>cash</option><option>card</option><option>split</option><option>online</option></select></div></div>
 <hr><div class="small" id="totals"></div>
-<button class="btn btn-success w-100 mt-2" onclick="checkout()"><i class="bi bi-check2-circle"></i> Place Order / Checkout</button>
+<button class="btn btn-success checkout-btn mt-2" onclick="checkout()"><i class="bi bi-check2-circle"></i> Place Order / Checkout</button>
 <div id="posMsg" class="small mt-2"></div></div></div></div></section>
 
 <!-- ORDERS -->
@@ -81,6 +134,8 @@ const PRODUCTS=[
  {id:7,name:'Loaded Fries',cat:'Burgers & Pizza',price:7.49,stock:50},{id:8,name:'Fresh Lime Soda',cat:'Drinks & Desserts',price:3.99,stock:null},
  {id:9,name:'Choco Lava Cake',cat:'Drinks & Desserts',price:6.49,stock:null},{id:10,name:'Family Feast Combo',cat:'Burgers & Pizza',price:39.99,stock:null}];
 const PLANS=[['Free',0,'1 branch · 5 staff · 300 orders/mo'],['Starter',29,'1 branch · 10 staff · KDS & reports'],['Professional',59,'3 branches · 25 staff · inventory & loyalty'],['Enterprise',119,'Unlimited branches & staff · priority support']];
+const FOODMAP=[['burger','photo-1568901346375-23c9450c58cd'],['zinger','photo-1568901346375-23c9450c58cd'],['pizza','photo-1513104890138-7c749659a591'],['salad','photo-1512621776951-a57141f2eefd'],['caesar','photo-1512621776951-a57141f2eefd'],['sushi','photo-1579871494447-9811cf80d66c'],['pasta','photo-1621996346565-e3dbc646d9a9'],['coffee','photo-1509042239860-f550ce710b93'],['steak','photo-1546964124-0cce460f38ef'],['grill','photo-1546964124-0cce460f38ef'],['chicken','photo-1546964124-0cce460f38ef'],['biryani','photo-1546964124-0cce460f38ef'],['cake','photo-1551024506-0bccd828d307'],['dessert','photo-1551024506-0bccd828d307'],['lava','photo-1551024506-0bccd828d307']];
+function imgFor(p){ const hay=(p.cat+' '+p.name).toLowerCase(); for(const [k,u] of FOODMAP){ if(hay.includes(k)) return 'https://images.unsplash.com/'+u+'?auto=format&fit=crop&w=600&q=60'; } return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=60'; }
 let db=JSON.parse(localStorage.getItem('restopro-demo')||'null');
 if(!db){ db={ tables:[['T1',4,'available'],['T2',4,'occupied'],['T3',2,'reserved'],['T4',6,'available'],['T5',4,'available'],['T6',8,'available'],['D1',4,'available'],['D2',4,'available']].map((t,i)=>({id:i+1,name:t[0],cap:t[1],status:t[2]})),
  orders:[ {n:'ORD-DEMO-001',type:'dine-in',items:'Zinger Burger ×2, Fresh Lime Soda ×2',total:35.66,pay:'cash',status:'completed'},
@@ -92,11 +147,11 @@ let cart={};
 function show(v){ document.querySelectorAll('.view').forEach(s=>s.classList.remove('on')); document.getElementById('v-'+v).classList.add('on'); document.querySelectorAll('.sidebar .nav-link').forEach(a=>a.classList.toggle('active',a.dataset.v===v)); if(v==='dashboard') renderDash(); if(v==='orders') renderOrders(); if(v==='kitchen') renderKds(); if(v==='tables') renderTables(); if(v==='menu') renderMenu(); if(v==='plans') renderPlans(); }
 function money(n){ return '$'+Number(n).toFixed(2); }
 function renderDash(){ const today=db.orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+o.total,0); const pending=db.orders.filter(o=>['pending','preparing','ready'].includes(o.status)).length;
- document.getElementById('statCards').innerHTML=[["Today's sales",money(today),'bi-cash-coin'],['Orders',db.orders.length,'bi-receipt'],['Pending orders',pending,'bi-hourglass'],['Products',PRODUCTS.length,'bi-journal-richtext'],['Tables',db.tables.length,'bi-grid-3x3'],['Low stock alerts',2,'bi-exclamation-triangle']].map(([l,v,i])=>`<div class="col-md-4 col-xl-2"><div class="card p-3"><i class="bi ${i} fs-4 text-primary"></i><div class="fs-4 fw-bold">${v}</div><div class="text-muted small">${l}</div></div></div>`).join('');
+ document.getElementById('statCards').innerHTML=[["Today's sales",money(today),'bi-cash-coin'],['Orders',db.orders.length,'bi-receipt'],['Pending orders',pending,'bi-hourglass'],['Products',PRODUCTS.length,'bi-journal-richtext'],['Tables',db.tables.length,'bi-grid-3x3'],['Low stock alerts',2,'bi-exclamation-triangle']].map(([l,v,i])=>`<div class="col-md-4 col-xl-2"><div class="card stat-card p-3"><i class="bi ${i} fs-4 text-primary"></i><div class="fs-4 fw-bold">${v}</div><div class="text-muted small">${l}</div></div></div>`).join('');
  document.getElementById('bestList').innerHTML=['Zinger Burger — 2 sold','Chicken Biryani — 2 sold','Fresh Lime Soda — 4 sold'].map(x=>`<div class="border-bottom py-2 small">${x}</div>`).join('');
- const ctx=document.getElementById('revChart'); if(ctx && !ctx._done){ ctx._done=1; new Chart(ctx,{type:'bar',data:{labels:['Thu','Fri','Sat','Sun','Mon','Tue','Today'],datasets:[{label:'Revenue $',data:[182,240,310,268,195,224,today],backgroundColor:'#ea580c'}]}}); } }
+ const ctx=document.getElementById('revChart'); if(ctx && !ctx._done){ ctx._done=1; Chart.defaults.color=document.body.classList.contains('dark')?'#a8a29e':'#78716c'; new Chart(ctx,{type:'bar',data:{labels:['Thu','Fri','Sat','Sun','Mon','Tue','Today'],datasets:[{label:'Revenue $',data:[182,240,310,268,195,224,today],backgroundColor:'#f97316',borderRadius:8}]}}); } }
 function renderGrid(){ const cat=document.getElementById('posCat').value, q=(document.getElementById('posSearch').value||'').toLowerCase();
- document.getElementById('grid').innerHTML=PRODUCTS.filter(p=>(!cat||p.cat===cat)&&p.name.toLowerCase().includes(q)).map(p=>`<div class="col-6 col-md-4 col-xl-3"><button class="btn btn-outline-secondary prod-btn p-2" onclick="add(${p.id})"><div class="fw-semibold small text-body">${p.name}</div><div class="small text-muted">${p.cat}</div><div class="fw-bold text-primary">${money(p.price)}</div><div class="small text-muted">${p.stock===null?'Always available':'Stock: '+p.stock}</div></button></div>`).join('')||'<p class="text-muted">No products match.</p>'; }
+ document.getElementById('grid').innerHTML=PRODUCTS.filter(p=>(!cat||p.cat===cat)&&p.name.toLowerCase().includes(q)).map(p=>`<div class="col-6 col-md-4 col-xl-3"><button class="btn btn-outline-secondary prod-btn" onclick="add(${p.id})"><span class="pos-img"><img src="${imgFor(p)}" alt="" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.remove()"></span><span class="pos-card-body"><span class="fw-semibold text-body d-block">${p.name}</span><span class="small text-muted d-block">${p.cat}</span><span class="pos-price d-block">${money(p.price)}</span><span class="small text-muted d-block">${p.stock===null?'Always available':'Stock: '+p.stock}</span></span></button></div>`).join('')||'<p class="text-muted">No products match.</p>'; }
 function add(id){ cart[id]=cart[id]||{qty:0}; cart[id].qty++; renderCart(); }
 function ch(id,d){ cart[id].qty+=d; if(cart[id].qty<=0) delete cart[id]; renderCart(); }
 function totals(){ let sub=0; for(const k in cart){ const p=PRODUCTS.find(x=>x.id==k); sub+=p.price*cart[k].qty; } const disc=sub*(+document.getElementById('iDisc').value||0)/100+(+document.getElementById('oDisc').value||0); const tax=Math.max(0,sub-disc)*(+document.getElementById('tax').value||0)/100; return {sub,disc,tax,total:Math.max(0,sub-disc+tax)}; }
@@ -115,12 +170,12 @@ function renderKds(){ const rows=db.orders.filter(o=>['pending','preparing','rea
  document.getElementById('kds').innerHTML=rows.length?rows.map(o=>{const i=db.orders.indexOf(o);return `<div class="col-md-4 col-xl-3"><div class="card p-3 h-100"><div class="d-flex justify-content-between"><strong>${o.n}</strong><span class="badge bg-${o.status==='ready'?'success':o.status==='preparing'?'warning':'secondary'}">${o.status}</span></div><div class="small text-muted">${o.type}</div><p class="small mt-2">${o.items}</p>${o.status==='pending'?`<button class="btn btn-warning btn-sm w-100" onclick="setStatus(${i},'preparing');renderKds()">Start cooking</button>`:o.status==='preparing'?`<button class="btn btn-success btn-sm w-100" onclick="setStatus(${i},'ready');renderKds()">Mark ready</button>`:'<span class="badge bg-success w-100 py-2">Ready for serving</span>'}</div></div>`}).join(''):'<div class="col-12"><div class="card p-4 text-center text-muted">No pending kitchen orders.</div></div>'; }
 function renderTables(){ document.getElementById('tablesGrid').innerHTML=db.tables.map((t,i)=>`<div class="col-6 col-md-3 col-xl-2"><div class="tbl card" style="cursor:pointer" onclick="cycleTable(${i})"><i class="bi bi-grid-3x3 fs-3"></i>${t.name}<span class="badge bg-${t.status==='available'?'success':t.status==='occupied'?'danger':'warning'}">${t.status}</span><span class="small text-muted">${t.cap} seats</span></div></div>`).join(''); }
 function cycleTable(i){ const order=['available','occupied','reserved']; const t=db.tables[i]; t.status=order[(order.indexOf(t.status)+1)%3]; save(); renderTables(); }
-function renderMenu(){ document.getElementById('menuBody').innerHTML=PRODUCTS.map(p=>`<tr><td><strong>${p.name}</strong></td><td>${p.cat}</td><td>${money(p.price)}</td><td>${p.stock===null?'—':p.stock}</td><td><span class="badge bg-success">Yes</span></td></tr>`).join(''); }
+function renderMenu(){ document.getElementById('menuBody').innerHTML=PRODUCTS.map(p=>`<tr><td><div class="d-flex align-items-center gap-2"><img class="menu-thumb" src="${imgFor(p)}" alt="" loading="lazy" onerror="this.remove()"><strong>${p.name}</strong></div></td><td>${p.cat}</td><td>${money(p.price)}</td><td>${p.stock===null?'—':p.stock}</td><td><span class="badge bg-success">Yes</span></td></tr>`).join(''); }
 function renderPlans(){ document.getElementById('planCards').innerHTML=PLANS.map(([n,pr,f])=>`<div class="col-md-3"><div class="card p-3 h-100 ${n==='Professional'?'border border-2 border-primary':''}"><h5>${n}</h5><div class="fs-4 fw-bold">${money(pr)}<small class="fs-6 text-muted">/mo</small></div><p class="small text-muted">${f}</p><button class="btn btn-${n==='Professional'?'primary':'outline-primary'} btn-sm w-100" onclick="alert('In the full PHP app this creates a subscription, payment and invoice in a transaction.')">${n==='Professional'?'Current plan':'Upgrade / Downgrade'}</button></div></div>`).join(''); }
 document.getElementById('posCat').innerHTML='<option value="">All categories</option>'+CATS.map(c=>`<option>${c}</option>`).join('');
 document.getElementById('oTable').innerHTML='<option value="">No table</option>'+db.tables.map(t=>`<option>${t.name}</option>`).join('');
 document.getElementById('posSearch').addEventListener('input',renderGrid); document.getElementById('posCat').addEventListener('change',renderGrid);
 document.getElementById('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('dark');localStorage.setItem('restopro-theme',document.body.classList.contains('dark')?'dark':'light');});
-if(localStorage.getItem('restopro-theme')==='dark')document.body.classList.add('dark');
+if(localStorage.getItem('restopro-theme')!=='light')document.body.classList.add('dark');
 renderGrid(); renderCart();
 </script></body></html>

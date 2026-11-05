@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img" aria-label="Empty plate illustration">
+  <defs>
+    <linearGradient id="eplate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#ffedd5"/>
+    </linearGradient>
+  </defs>
+  <circle cx="120" cy="84" r="66" fill="#ffedd5"/>
+  <circle cx="120" cy="84" r="66" fill="none" stroke="#fed7aa" stroke-width="2" stroke-dasharray="5 7"/>
+  <!-- empty cloche base / plate -->
+  <ellipse cx="120" cy="112" rx="62" ry="13" fill="url(#eplate)" stroke="#fdba74" stroke-width="2"/>
+  <path d="M76 108c3-22 22-36 44-36s41 14 44 36z" fill="#fff7ed" stroke="#fdba74" stroke-width="2" opacity=".75"/>
+  <circle cx="120" cy="67" r="4.5" fill="#f97316"/>
+  <!-- steam question -->
+  <g fill="none" stroke="#ea580c" stroke-width="3.4" stroke-linecap="round" opacity=".85">
+    <path d="M104 52c-4-6 4-8 0-14"/>
+    <path d="M136 52c-4-6 4-8 0-14"/>
+  </g>
+  <!-- cutlery -->
+  <g stroke="#d6d3d1" stroke-width="4" stroke-linecap="round">
+    <line x1="34" y1="76" x2="34" y2="118"/><line x1="206" y1="76" x2="206" y2="118"/>
+  </g>
+  <circle cx="34" cy="68" r="5" fill="#d6d3d1"/><path d="M206 60v14" stroke="#d6d3d1" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#f97316">
+    <circle cx="88" cy="140" r="3"/><circle cx="120" cy="146" r="3"/><circle cx="152" cy="140" r="3"/>
+  </g>
+</svg>

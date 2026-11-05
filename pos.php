@@ -7,16 +7,19 @@ $prods = qa($pdo,'SELECT p.*,c.name cat_name FROM products p LEFT JOIN categorie
 $tables = qa($pdo,'SELECT * FROM restaurant_tables WHERE tenant_id=?'.($bid?' AND branch_id='.(int)$bid:'').' ORDER BY name',[$tid]);
 $customers = qa($pdo,'SELECT * FROM customers WHERE tenant_id=? ORDER BY name',[$tid]);
 $branches = tenant_branches($pdo,$tid);
-include __DIR__ . '/includes/header.php'; ?>
+include __DIR__ . '/includes/header.php';
+$foodMap = ['burger'=>'photo-1568901346375-23c9450c58cd','zinger'=>'photo-1568901346375-23c9450c58cd','sandwich'=>'photo-1568901346375-23c9450c58cd','pizza'=>'photo-1513104890138-7c749659a591','salad'=>'photo-1512621776951-a57141f2eefd','caesar'=>'photo-1512621776951-a57141f2eefd','sushi'=>'photo-1579871494447-9811cf80d66c','roll'=>'photo-1579871494447-9811cf80d66c','pasta'=>'photo-1621996346565-e3dbc646d9a9','noodle'=>'photo-1621996346565-e3dbc646d9a9','spaghetti'=>'photo-1621996346565-e3dbc646d9a9','coffee'=>'photo-1509042239860-f550ce710b93','tea'=>'photo-1509042239860-f550ce710b93','steak'=>'photo-1546964124-0cce460f38ef','grill'=>'photo-1546964124-0cce460f38ef','chicken'=>'photo-1546964124-0cce460f38ef','biryani'=>'photo-1546964124-0cce460f38ef','kebab'=>'photo-1546964124-0cce460f38ef','cake'=>'photo-1551024506-0bccd828d307','dessert'=>'photo-1551024506-0bccd828d307','lava'=>'photo-1551024506-0bccd828d307','sweet'=>'photo-1551024506-0bccd828d307'];
+$foodDefault = 'photo-1504674900247-0877df9cc836'; ?>
 <div class="row g-3">
 <div class="col-lg-8"><div class="card p-3">
 <div class="d-flex gap-2 mb-3"><input class="form-control" id="posSearch" placeholder="Search products…"><select class="form-select w-auto" id="posCat"><option value="">All categories</option><?php foreach($cats as $c): ?><option value="<?= $c['id'] ?>"><?= e($c['name']) ?></option><?php endforeach; ?></select></div>
 <div class="row g-2" id="productGrid">
 <?php foreach($prods as $p): ?><div class="col-6 col-md-4 col-xl-3 prod" data-cat="<?= $p['category_id'] ?>" data-name="<?= e(strtolower($p['name'])) ?>">
-<button type="button" class="btn btn-outline-secondary w-100 h-100 text-start p-2" onclick="addToCart(<?= $p['id'] ?>,<?= json_encode($p['name']) ?>,<?= (float)$p['price'] ?>)">
-<?php if($p['image_url']): ?><img src="<?= e($p['image_url']) ?>" class="img-fluid rounded mb-1" style="height:64px;width:100%;object-fit:cover" alt=""><?php endif; ?>
-<div class="fw-semibold small text-body"><?= e($p['name']) ?></div><div class="small text-muted"><?= e($p['cat_name'] ?? '') ?><?= $p['is_combo']?' · Combo':'' ?></div><div class="fw-bold text-primary"><?= money($p['price']) ?></div>
-<div class="small <?= $p['track_stock'] && $p['stock_quantity']<=0?'text-danger':'text-muted' ?>"><?= $p['track_stock']?('Stock: '.$p['stock_quantity']):'Always available' ?></div></button></div><?php endforeach; ?>
+<button type="button" class="btn btn-outline-secondary prod-card-btn w-100 h-100 text-start" onclick="addToCart(<?= $p['id'] ?>,<?= json_encode($p['name']) ?>,<?= (float)$p['price'] ?>)">
+<?php $hay = strtolower(($p['cat_name'] ?? '') . ' ' . $p['name']); $pimg = $p['image_url'] ?? ''; if (!$pimg) { $ph = $foodDefault; foreach ($foodMap as $kw => $u) { if (str_contains($hay, $kw)) { $ph = $u; break; } } $pimg = 'https://images.unsplash.com/' . $ph . '?auto=format&fit=crop&w=600&q=60'; } ?>
+<span class="pos-img"><img src="<?= e($pimg) ?>" loading="lazy" onerror="this.remove()" alt=""></span>
+<span class="pos-card-body"><span class="fw-semibold text-body d-block"><?= e($p['name']) ?></span><span class="small text-muted d-block"><?= e($p['cat_name'] ?? '') ?><?= $p['is_combo']?' · Combo':'' ?></span><span class="pos-price d-block"><?= money($p['price']) ?></span>
+<span class="small d-block <?= $p['track_stock'] && $p['stock_quantity']<=0?'text-danger':'text-muted' ?>"><?= $p['track_stock']?('Stock: '.$p['stock_quantity']):'Always available' ?></span></span></button></div><?php endforeach; ?>
 </div></div></div>
 <div class="col-lg-4"><div class="card p-3 sticky-top" style="top:1rem"><h6><i class="bi bi-cart3"></i> Current order</h6>
 <div class="row g-2 mb-2"><div class="col-6"><select class="form-select form-select-sm" id="orderType"><option value="dine-in">Dine-in</option><option value="takeaway">Takeaway</option><option value="delivery">Delivery</option></select></div>
